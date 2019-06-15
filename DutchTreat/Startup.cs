@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using DutchTreat.Data.Interfaces;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DutchTreat
 {
@@ -27,8 +30,12 @@ namespace DutchTreat
             services.AddDbContext<DutchContext>(cfg => {
                 cfg.UseSqlServer(_config.GetConnectionString("DefaultConnectionString"));
             });
+
+            services.AddTransient<DutchSeeder>();
             services.AddTransient<IMailService, EmailService>();
-            services.AddMvc();
+            services.AddScoped<IDutchRepository, DutchRepository>();
+            
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -43,6 +50,7 @@ namespace DutchTreat
             }
 
             app.UseStaticFiles();
+            app.UseStatusCodePages();
 
             app.UseMvc(cfg => {
                 cfg.MapRoute("Default", 

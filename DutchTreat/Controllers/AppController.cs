@@ -4,22 +4,24 @@ using DutchTreat.Models;
 using DutchTreat.Contracts;
 using DutchTreat.Data;
 using System.Linq;
+using DutchTreat.Data.Interfaces;
 
 namespace DutchTreat.Controllers
 {
     public class AppController : Controller
     {
         private readonly IMailService _mailService;
-        private readonly DutchContext _context;
-        public AppController(IMailService mailService, DutchContext context)
+        private readonly IDutchRepository _repo;
+        public AppController(IMailService mailService, IDutchRepository repo)
         {
             _mailService = mailService;
-            _context = context;
+            _repo = repo;
         }
 
         [HttpGet("Index")]
         public IActionResult Index() 
         {
+            var result = _repo.GetAllProducts();
             return View();
         }
 
@@ -50,12 +52,9 @@ namespace DutchTreat.Controllers
         }
         
         [HttpGet("shop")]
-        public IActionResult Shop(){
-            var result = from p in _context.Products
-                            orderby p.Category
-                            select p;
-
-            return View(result.ToList());
+        public IActionResult Shop()
+        {
+            return View(_repo.GetAllProducts());
         }
     }
 }

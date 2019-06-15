@@ -1,3 +1,4 @@
+using System;
 using DutchTreat.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +8,6 @@ namespace DutchTreat.Data
     {
         public DutchContext(DbContextOptions<DutchContext> options): base(options)
         {
-            Database.EnsureCreated();
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -15,9 +15,12 @@ namespace DutchTreat.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Product>()
-                .HasData(new Order(){
-
+            modelBuilder.Entity<Order>()
+                .HasData(new Order()
+                {
+                    Id = 1,
+                    OrderDate = DateTime.UtcNow,
+                    OrderNumber = "1234"
                 });
         }
     }

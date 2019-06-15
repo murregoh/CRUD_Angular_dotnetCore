@@ -32,6 +32,14 @@ namespace DutchTreat.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            OrderDate = new DateTime(2019, 6, 15, 1, 10, 45, 70, DateTimeKind.Utc).AddTicks(6740),
+                            OrderNumber = "1234"
+                        });
                 });
 
             modelBuilder.Entity("DutchTreat.Data.Entities.OrderItem", b =>
