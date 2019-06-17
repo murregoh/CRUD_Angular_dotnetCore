@@ -14,6 +14,9 @@ using Microsoft.Extensions.Configuration;
 using DutchTreat.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using DutchTreat.Data.Entities;
+using DutchTreat.Models;
 
 namespace DutchTreat
 {
@@ -35,7 +38,10 @@ namespace DutchTreat
             services.AddTransient<IMailService, EmailService>();
             services.AddScoped<IDutchRepository, DutchRepository>();
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .AddJsonOptions(opt => 
+                    opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                );
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -57,6 +63,14 @@ namespace DutchTreat
                 "/{controller}/{action}/{id?}",
                 new { controller = "App", Action = "Index"});
             });
+
+            AutoMapper.Mapper.Initialize(
+                cfg => {
+                    cfg.CreateMap<Order, OrderDto>().ReverseMap();
+                    cfg.CreateMap<Product, ProductDto>().ReverseMap();
+                    cfg.CreateMap<OrderItem, OrderItemDto>().ReverseMap();
+                }
+            );
         }
     }
 }

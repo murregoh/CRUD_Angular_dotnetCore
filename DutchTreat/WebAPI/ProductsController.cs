@@ -8,7 +8,6 @@ namespace DutchTreat.WebAPI
 {
     [Route("api/products")]
     [ApiController]
-    [Produces("applicacion/json")]
     public class ProductsController : ControllerBase
     {
         private readonly IDutchRepository _repository;
@@ -28,7 +27,7 @@ namespace DutchTreat.WebAPI
             }
             catch (Exception ex)
             {
-                return BadRequest($"Unable to get products: {ex.Message}";
+                return BadRequest($"Unable to get products: {ex.Message}");
             }
             
         }
